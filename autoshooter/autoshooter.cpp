@@ -1,69 +1,40 @@
-#include <raylib.h>
 #include <iostream>
-#include <vector>
+#include <raylib.h>
 
-//GLOBAL CONSTS
-//interaction
-const char UP = 'W';
-const char DOWN = 'S';
-const char RIGHT = 'D';
-const char LEFT = 'A';
-const char CHEAT = '5';
-//Numeric value settings
-const char SHOOT = 32;
-const float playerSpeed = 5.0f;
-float shootSpeed = 10.0f;
-//Window data
-const int screenWidth = 1280;
-const int screenHeight = 800;
+#include "GameData.h"
+#include "Character.h"
+#include "Projectile.h"
 
-//STRUCTS (Characters)
-struct Player 
-{
-    Vector2 position;
-    int health;
-    int size;
-    int level; 
-};
-
-struct Enemy 
-{
-    Vector2 position;
-    int health;
-    int size;
-    Enemy(Vector2 startPos, int startHealth, int size) : position(startPos), health(startHealth), size(size) {}
-};
-
-struct Projectile 
-{
-    Vector2 position;
-    Vector2 velocity;
-    int damage;
-    int size;
-    Color color;
-};
+using namespace std;
 
 //data structures to contain game data
-std::vector<Projectile> projectiles;
-std::vector<Enemy> enemies;
+vector<Projectile> projectiles;
+vector<Enemy> enemies;
+
+//player starts in the center (and Should stay there)
+Player player = { CENTER_SCREEN, 100, 15, 1, 1.5f };
+
+void Initialize() {
+    InitWindow(WIDTH, HEIGHT, GAME_NAME);
+    SetTargetFPS(FPS);
+  
+    // Initialize game variables
+    //TODO: Randomize Spawning the Enemies out of the Screen
+    enemies.push_back(Enemy{ {600, 300.0f}, 50, 15, 1, 1.5f });
+    enemies.push_back(Enemy{ {1000, 800.0f}, 50, 25, 1, 1.5f });
+    enemies.push_back(Enemy{ {150.0f, 150.0f}, 50, 15, 1, 1.5f });
+    enemies.push_back(Enemy{ {50.0f, 300.0f}, 50, 15, 1, 1.5f });
+
+}
+
+
+void HandleInput() {
+
+}
 
 int main() 
 {
-
-    InitWindow(screenWidth, screenHeight, "Autoshooter");
-    SetTargetFPS(60);
-
-    //player starts in the center (and Should stay there)
-    Player player = { { screenWidth / 2, screenHeight / 2 }, 100, 15, 1 };
-
-    // Initialize game variables
-    //TODO: Randomize Spawning the Enemies out of the Screen
-    enemies.push_back(Enemy{ {600, 300.0f}, 50, 15 });
-    enemies.push_back(Enemy{ {1000, 800.0f}, 50, 25 });
-    enemies.push_back(Enemy{ {150.0f, 150.0f}, 50, 15 });
-    enemies.push_back(Enemy{ {50.0f, 300.0f}, 50, 15 });
-
-
+    Initialize();
 
     //Interaction
     while (!WindowShouldClose()) 
@@ -95,15 +66,15 @@ int main()
         }
 
         //We use the normalized input to move the Player (we move everybody elsse, not the player)
-        float playerSpeed = 2.0f; 
+       
 
-        //TODO: Create random enemies?
+        //TODO: Character Move Method?
         for (auto& enemy : enemies) {
-             enemy.position.x += inputDirection.x * playerSpeed;
-             enemy.position.y += inputDirection.y * playerSpeed;
+           /*  enemy.position.x += inputDirection.x * playerSpeed;
+             enemy.position.y += inputDirection.y * playerSpeed;*/
+            enemy.Move(inputDirection, player.speed);
         }
-      //  player.position.x += inputDirection.x * playerSpeed;
-      //  player.position.y += inputDirection.y * playerSpeed;
+
 
         if (IsKeyPressed(SHOOT)) 
         {
@@ -119,12 +90,7 @@ int main()
 
         Vector2 shootDirection = inputDirection;
         float shootSpeed = 10.0f;
-        //The Line Below was intantiating etra circles besides projectiles
-        //projectiles.push_back({ player.position, shootDirection, 10 });
-        if (IsKeyPressed(CHEAT)) 
-        {
-            player.level + 5;
-        }
+     
 
         //DRAWING 2 THE SCREEN
         BeginDrawing();
@@ -207,6 +173,13 @@ int main()
 
         // End UI drawing
         EndDrawing();
+
+        //The Line Below was intantiating etra circles besides projectiles
+     //projectiles.push_back({ player.position, shootDirection, 10 });
+        if (IsKeyPressed(CHEAT))
+        {
+            player.level + 5;
+        }
     }
 
     CloseWindow();
