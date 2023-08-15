@@ -4,7 +4,7 @@
 using namespace std;
 
 //GLOBAL CONSTS
-//interaction
+//interaction sdfasdfsda
 const char UP = 'W';
 const char DOWN = 'S';
 const char RIGHT = 'D';
