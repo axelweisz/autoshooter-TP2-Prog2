@@ -11,11 +11,13 @@ using namespace std;
 vector<Projectile> projectiles;
 vector<Enemy> enemies;
 
+
 //player starts in the center (and Should stay there)
-Player player = { CENTER_SCREEN, 100, 15, 1, 1.5f };
+Player player = { { WIDTH / 2, (int)HEIGHT / 2 }, 100, 15, 1, 1.5f };
+
 
 void Initialize() {
-    InitWindow(WIDTH, HEIGHT, GAME_NAME);
+    InitWindow(WIDTH, HEIGHT, "AutoShooter");
     SetTargetFPS(FPS);
   
     // Initialize game variables
@@ -24,9 +26,7 @@ void Initialize() {
     enemies.push_back(Enemy{ {1000, 800.0f}, 50, 25, 1, 1.5f });
     enemies.push_back(Enemy{ {150.0f, 150.0f}, 50, 15, 1, 1.5f });
     enemies.push_back(Enemy{ {50.0f, 300.0f}, 50, 15, 1, 1.5f });
-
 }
-
 
 void HandleInput() {
 
@@ -35,7 +35,7 @@ void HandleInput() {
 int main() 
 {
     Initialize();
-
+    
     //Interaction
     while (!WindowShouldClose()) 
     {
@@ -65,40 +65,35 @@ int main()
             inputDirection.y /= inputLength;
         }
 
-        //We use the normalized input to move the Player (we move everybody elsse, not the player)
-       
-
-        //TODO: Character Move Method?
         for (auto& enemy : enemies) {
-           /*  enemy.position.x += inputDirection.x * playerSpeed;
-             enemy.position.y += inputDirection.y * playerSpeed;*/
             enemy.Move(inputDirection, player.speed);
         }
 
-
-        if (IsKeyPressed(SHOOT)) 
-        {
-            Vector2 shootDirection = { 0.0f, -1.0f };
-            if (inputDirection.x != 0.0f || inputDirection.y != 0.0f) 
-            {
-                shootDirection = inputDirection; 
-            }
-            float shootSpeed = 10.0f; 
-            Projectile p = { player.position, shootDirection, 10, 5,  GREEN };
-            projectiles.push_back(p);
-        }
-
         Vector2 shootDirection = inputDirection;
-        float shootSpeed = 10.0f;
-     
+        player.SetWeapon(MachineGun());
+
+        if (IsKeyPressed(SHOOT))
+        {    
+            Vector2 shootDirection = { 0.0f, -1.0f };
+            if (inputDirection.x != 0.0f || inputDirection.y != 0.0f)
+            {
+                shootDirection = inputDirection;
+            }
+           
+            Weapon w = MachineGun();
+            vector<Projectile> bullets = w.m_Shoot(player.position, shootDirection);
+            for (auto b: bullets) {
+                projectiles.push_back(b);
+            }
+            
+        }
+         
 
         //DRAWING 2 THE SCREEN
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            
             //Draw PLAYER
-            DrawCircle(player.position.x, player.position.y, 20, BLUE);
-            
+            DrawCircle(player.position.x, player.position.y, 20, BLUE);     
             // Draw ENEMIES
             for (Enemy& enemy : enemies) 
             {
@@ -117,11 +112,10 @@ int main()
                 enemy.position.y += directionToPlayer.y * enemySpeed;
                 DrawCircle(enemy.position.x, enemy.position.y, enemy.size, RED);
             }
-           
             // Draw PROJECTILES
             for (const Projectile& projectile : projectiles)
-            {
-                DrawCircle(projectile.position.x, projectile.position.y, 5, GREEN);
+            {   
+                DrawCircle(projectile.position.x, projectile.position.y, projectile.size, projectile.color);
             }
 
             //chck collisions ENEMY -> PLAYER
@@ -130,17 +124,17 @@ int main()
                 for (auto& enemy : enemies) {
                     if (CheckCollisionCircles(enemy.position, enemy.size, player.position, player.size)) {
                         player.health -= 1;
-                        std::cout << "player health: " << player.health;
+                        cout << "player health: " << player.health;
                         enemies.erase(enemies.begin() + i);
                     }
                 }
             }
-            //move projs
+            
+            //MOVE PROJECTILES
             //and chck collisions PROJECTIBLE - ENEMY 
             for (auto& projectile : projectiles) {
                 //move projectible
-                projectile.position.x += projectile.velocity.x * shootSpeed;
-                projectile.position.y += projectile.velocity.y * shootSpeed;
+                projectile.Move();
 
                 //enemies.begins gets the first item. 
                 //.end() returns an index out of reach, thus the condition  it != enemies.end()
@@ -149,6 +143,7 @@ int main()
                     if (CheckCollisionCircles(projectile.position, projectile.size, enemy.position, enemy.size)) {
                         // Projectile hit an enemy
                         enemy.health -= projectile.damage; 
+                        player.health += 1;
                         if (enemy.health <= 0) {
                             it = enemies.erase(it);  // Erase the enemy and update 'it' to point to the next element
                             break; //out of inner loop and goes to the next projectile in projectiles vector 
@@ -156,9 +151,7 @@ int main()
                         else {
                             ++it; //go 2  nxt enemy - if enemy.health > 0 
                         }
-                        //TO DO - ADD POINTS TO THE PLAYER
                         //TO DO - XPs are instantiated here I guess
-
                     }
                     else {
                         ++it;  //go nxt enemy - if ENEMY NOT COLLIDED

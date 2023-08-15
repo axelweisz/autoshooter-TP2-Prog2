@@ -2,6 +2,8 @@
 #include <vector>
 #include <raylib.h>
 
+#include "Weapon.h"
+
 class Character
 {
 public:
@@ -10,19 +12,21 @@ public:
         int size;
         int level;
         float speed;
-
+       
 public:
-    void Move(Vector2 _direction, float _speed);
+    void Move(Vector2 _direction, float _speed);  
     void SetSpeed(int);
 };
 
 class Player:public Character
 {
 private:
-    Vector2 shootDirection;
+    Weapon weapon;
 
 public:
         Player(Vector2 startPos, int startHealth, int size, int level, float _speed);
+        Weapon GetWeapon();
+        void SetWeapon(Weapon); 
 };
 
 
