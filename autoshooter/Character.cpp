@@ -1,5 +1,6 @@
 #include "Character.h"
 
+/********************  CHARACTER **************************/
 
 void Character::Move(Vector2 _direction, float _speed)
 {
@@ -7,10 +8,6 @@ void Character::Move(Vector2 _direction, float _speed)
 	position.y += _direction.y * _speed;
 }
 
-void Character::SetSpeed(int _newSpeed)
-{
-	speed = _newSpeed;
-}
 
 /******************** PLAYER CHARACTER **************************/
 Player::Player(Vector2 _startPos, int _startHealth, int _size, int _level, float _speed)

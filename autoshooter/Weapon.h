@@ -13,11 +13,15 @@ class Weapon
 public:
 		string name;
 		float fireRate;
+		float bulletSpeed;
+		int bulletDamage;
+		int bulletSize;
+		Color bulletColor;
 		vector<Projectile> bullets;
 
 public:
 	Weapon();
-	Weapon(string, float);
+	Weapon(string, float, float, int, int, Color);
 	virtual ~Weapon();
 	virtual vector<Projectile> m_Shoot(Vector2, Vector2);
 };
@@ -25,7 +29,7 @@ public:
 class MachineGun : public Weapon
 {
 private:
-	int m_numOfBulletsShot;
+	int m_numBulletsShotAtOnce;
 
 public:
 	MachineGun();

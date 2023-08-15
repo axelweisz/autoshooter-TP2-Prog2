@@ -13,7 +13,7 @@ vector<Enemy> enemies;
 
 
 //player starts in the center (and Should stay there)
-Player player = { { WIDTH / 2, (int)HEIGHT / 2 }, 100, 15, 1, 1.5f };
+Player player = { CENTER_SCREEN, 100, 15, 1, 1.5f };
 
 
 void Initialize() {
@@ -22,10 +22,10 @@ void Initialize() {
   
     // Initialize game variables
     //TODO: Randomize Spawning the Enemies out of the Screen
-    enemies.push_back(Enemy{ {600, 300.0f}, 50, 15, 1, 1.5f });
-    enemies.push_back(Enemy{ {1000, 800.0f}, 50, 25, 1, 1.5f });
-    enemies.push_back(Enemy{ {150.0f, 150.0f}, 50, 15, 1, 1.5f });
-    enemies.push_back(Enemy{ {50.0f, 300.0f}, 50, 15, 1, 1.5f });
+    enemies.push_back(Enemy{ {200, 100.0f}, 50, 20, 1, 0.5f });
+    enemies.push_back(Enemy{ {400, 800.0f}, 50, 20, 1, 0.5f });
+    enemies.push_back(Enemy{ {600, 150.0f}, 50, 20, 1, 0.5f });
+    enemies.push_back(Enemy{ {1000, 700.0f}, 50, 20, 1, 0.5f });
 }
 
 void HandleInput() {
@@ -36,7 +36,7 @@ int main()
 {
     Initialize();
     
-    //Interaction
+    //GameLoop
     while (!WindowShouldClose()) 
     {
         // Input 
@@ -79,16 +79,13 @@ int main()
             {
                 shootDirection = inputDirection;
             }
-           
-            Weapon w = MachineGun();
+            Weapon w = player.GetWeapon();
             vector<Projectile> bullets = w.m_Shoot(player.position, shootDirection);
             for (auto b: bullets) {
                 projectiles.push_back(b);
-            }
-            
+            }   
         }
          
-
         //DRAWING 2 THE SCREEN
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -106,12 +103,13 @@ int main()
                 directionToPlayer.y /= directionLength;
 
                 // Mettre à jour la position de l'ennemi en fonction de la direction
-                float enemySpeed = 3.0f; // Vitesse de déplacement de l'ennemi
+                float enemySpeed = 1.5f; // Vitesse de déplacement de l'ennemi
                 //we update the position and render it to screen
                 enemy.position.x += directionToPlayer.x * enemySpeed;
                 enemy.position.y += directionToPlayer.y * enemySpeed;
                 DrawCircle(enemy.position.x, enemy.position.y, enemy.size, RED);
             }
+
             // Draw PROJECTILES
             for (const Projectile& projectile : projectiles)
             {   
@@ -124,51 +122,64 @@ int main()
                 for (auto& enemy : enemies) {
                     if (CheckCollisionCircles(enemy.position, enemy.size, player.position, player.size)) {
                         player.health -= 1;
-                        cout << "player health: " << player.health;
+                        //cout << "player health: " << player.health;
                         enemies.erase(enemies.begin() + i);
                     }
+                    else {
+                        i++;
+                    }
                 }
             }
-            
-            //MOVE PROJECTILES
-            //and chck collisions PROJECTIBLE - ENEMY 
-            for (auto& projectile : projectiles) {
-                //move projectible
-                projectile.Move();
 
-                //enemies.begins gets the first item. 
-                //.end() returns an index out of reach, thus the condition  it != enemies.end()
-                for (auto it = enemies.begin(); it != enemies.end(); ) {
-                    auto& enemy = *it; 
+            //MOVE PROJECTILES and chck collisions with - ENEMY 
+            for (auto itProjectile = projectiles.begin(); itProjectile != projectiles.end(); ) {
+                auto& projectile = *itProjectile;
+                // Move projectile
+                projectile.Move();
+                bool projectileHit = false;
+                
+                // Iterate through enemies
+                for (auto itEnemy = enemies.begin(); itEnemy != enemies.end(); ) {
+                    auto& enemy = *itEnemy;
                     if (CheckCollisionCircles(projectile.position, projectile.size, enemy.position, enemy.size)) {
-                        // Projectile hit an enemy
-                        enemy.health -= projectile.damage; 
-                        player.health += 1;
+                        // Projectile hits an enemy
+                        enemy.health -= projectile.damage;
+                        cout << "enemy health: " << enemy.health << endl;
+                        projectileHit = true;// Mark projectile as hit
                         if (enemy.health <= 0) {
-                            it = enemies.erase(it);  // Erase the enemy and update 'it' to point to the next element
-                            break; //out of inner loop and goes to the next projectile in projectiles vector 
+                            // Erase the enemy and update 'itEnemy' to point to the next element
+                            itEnemy = enemies.erase(itEnemy);
                         }
                         else {
-                            ++it; //go 2  nxt enemy - if enemy.health > 0 
+                            //if COLLIDE && enemy.health > 0 - check the nxt enemy
+                            ++itEnemy;
                         }
-                        //TO DO - XPs are instantiated here I guess
+                        player.health += 1; // Increment player health
+
+                        break; // No need to continue checking other enemies for this projectile
                     }
                     else {
-                        ++it;  //go nxt enemy - if ENEMY NOT COLLIDED
+                        //If NOT COLLIDE Go to the next enemy
+                        ++itEnemy;
                     }
+                }
+                if (projectileHit) {
+                    // Erase the projectile and update 'itProjectile' to point to the next element
+                    itProjectile = projectiles.erase(itProjectile);
+                }
+                else {
+                    // Go to the next projectile
+                    ++itProjectile;
                 }
             }
 
 
-        // Draw UI
-        DrawRectangle(10, 10, player.health * 2, 20, GREEN); // Health bar
-        DrawRectangle(10, 40, player.level * 50, 20, BLUE);  // Experience bar
+            /************* DRAW UI********************************/
+            DrawRectangle(10, 10, player.health * 2, 20, GREEN); // Health bar
+            DrawRectangle(10, 40, player.level * 50, 20, BLUE);  // Experience bar
 
-        // End UI drawing
         EndDrawing();
 
-        //The Line Below was intantiating etra circles besides projectiles
-     //projectiles.push_back({ player.position, shootDirection, 10 });
         if (IsKeyPressed(CHEAT))
         {
             player.level + 5;

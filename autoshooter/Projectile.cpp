@@ -5,32 +5,25 @@ Projectile::Projectile()
 {  
 	position = { 0, 0 };
 	direction = { 0,0 };
-	damage = 1;
+	damage = 10;
 	size = 3;
-	speed = 1.5f;
+	speed = 2.0f;
 	color = GOLD;
 }
 
 //complete constructor
-Projectile::Projectile(Vector2 _startPosition,  int _damage, int _size, Color _color)
-{
-	position = _startPosition;
-	damage = _damage;
-	size = _size;
-	speed = 1.5f;
-	color = _color;
-}
-
-//constructor only start pos
-Projectile::Projectile(Vector2 _startPosition, Vector2 _direction)
+Projectile::Projectile(Vector2 _startPosition, Vector2 _direction, int _damage, int _size, float _speed,  Color _color)
 {
 	position = _startPosition;
 	direction = _direction;
-	damage = 1;
-	size = 3;
-	speed = 1.5f;
-	color = RED;
+	damage = _damage;
+	size = _size;
+	speed = _speed;
+	color = _color;
 }
+
+//constructor  start pos and direction
+
 
 void Projectile::Move()
 {

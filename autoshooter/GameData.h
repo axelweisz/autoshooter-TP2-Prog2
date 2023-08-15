@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <raylib.h>
 using namespace std;
 
 //GLOBAL CONSTS
@@ -14,11 +15,11 @@ const char CHEAT = '5';
 //Numeric value settings
 const char SHOOT = 32;
 const float playerSpeed = 5.0f;
-//float shootSpeed = 10.0f;
+
 
 //Window data
 
-const int WIDTH = 640;
-const int HEIGHT = 400;
+const int WIDTH = 1280;
+const int HEIGHT = 800;
 const int FPS = 60;
-//Vector2 CENTER_SCREEN = { WIDTH / 2, (int)HEIGHT / 2 };
+const Vector2 CENTER_SCREEN = { WIDTH / 2, (int)HEIGHT / 2 };

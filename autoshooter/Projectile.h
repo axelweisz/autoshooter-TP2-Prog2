@@ -13,11 +13,16 @@ public:
 
 public:
     Projectile();
-    Projectile(Vector2 _startPosition,  int _damage, int _size, Color _color);
-    Projectile(Vector2 _startPosition, Vector2 _direction);
+    Projectile(
+        Vector2 _startPosition, 
+        Vector2 _direction, 
+        int _damage, 
+        int _size, 
+        float _speed,
+        Color _color
+    );
 
 public:
-    Vector2 GetPosition() {  return position; }
     void Move();
 };
 

@@ -15,7 +15,6 @@ public:
        
 public:
     void Move(Vector2 _direction, float _speed);  
-    void SetSpeed(int);
 };
 
 class Player:public Character
