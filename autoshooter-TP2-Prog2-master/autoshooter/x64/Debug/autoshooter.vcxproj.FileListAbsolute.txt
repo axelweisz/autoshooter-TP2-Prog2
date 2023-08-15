@@ -1,0 +1,2 @@
+C:\Users\Shadow\Desktop\Prog2\autoshooter\autoshooter\x64\Debug\autoshooter.vcxproj.CopyComplete
+C:\Users\mrsha\OneDrive\Bureau\autoshooter-TP2-Prog2-master\autoshooter\x64\Debug\autoshooter.exe
