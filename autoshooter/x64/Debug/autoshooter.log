@@ -1,7 +1,1 @@
-﻿  autoshooter.cpp
-C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\autoshooter\autoshooter.cpp(82,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\autoshooter\autoshooter.cpp(82,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\autoshooter\autoshooter.cpp(102,98): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\autoshooter\autoshooter.cpp(102,70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\autoshooter\autoshooter.cpp(174,26): warning C4552: '+': result of expression not used
-  autoshooter.vcxproj -> C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\x64\Debug\autoshooter.exe
+﻿  autoshooter.vcxproj -> C:\Users\Shadow\Desktop\autoshooter-TP2-Prog2-master-2\x64\Debug\autoshooter.exe

@@ -11,6 +11,12 @@ using namespace std;
 vector<Projectile> projectiles;
 vector<Enemy> enemies;
 
+float RandomFloat(float min, float max)
+{
+    return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
+}
+
+
 //player starts in the center (and Should stay there)
 Player player = {CENTER_SCREEN, 15, MAGENTA, 1.f, 50, 1};
 
@@ -18,11 +24,17 @@ void Initialize() {
 
     InitWindow(WIDTH, HEIGHT, "AutoShooter");
     SetTargetFPS(FPS);
+
+   
+    //Enemies Spawn
+    for (int i = 0; i < DESIRED_ENEMY_COUNT; i++)
+    {
+        Vector2 newEnemyPos = { RandomFloat(0, WIDTH), RandomFloat(0, HEIGHT) };
+        enemies.push_back(Enemy{ newEnemyPos , 20, RED, 1, 10, 1.5f });
+    }
+
     //TODO: Randomize Spawning the Enemies out of the Screen
-    enemies.push_back(Enemy{ {200, 100.0f}, 20, RED, 1, 10, 1.5f});
-    enemies.push_back(Enemy{ {400, 800.0f}, 20, GOLD, 1, 10, 1.5f});
-    enemies.push_back(Enemy{ {600, 150.0f}, 20, LIGHTGRAY, 1, 10, 1.5f});
-    enemies.push_back(Enemy{ {1000, 700.0f}, 20, PURPLE, 1, 10, 1.5f});
+
 }
 
 void HandleInput() 
