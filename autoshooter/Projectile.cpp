@@ -30,3 +30,8 @@ void Projectile::Move()
 	position.x += direction.x * speed;
 	position.y += direction.y * speed;
 }
+
+void Projectile::Draw()
+{
+	DrawCircle(position.x, position.y, size, color);
+}

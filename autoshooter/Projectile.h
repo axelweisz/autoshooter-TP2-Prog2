@@ -24,5 +24,6 @@ public:
 
 public:
     void Move();
+    void Draw();
 };
 

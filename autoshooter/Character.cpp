@@ -1,22 +1,27 @@
 #include "Character.h"
 
 /********************  CHARACTER **************************/
-
 void Character::Move(Vector2 _direction, float _speed)
 {
 	position.x += _direction.x * _speed;
 	position.y += _direction.y * _speed;
 }
 
+void Character::Draw()
+{
+	DrawCircle(position.x, position.y, size, color);
+}
+
 
 /******************** PLAYER CHARACTER **************************/
-Player::Player(Vector2 _startPos, int _startHealth, int _size, int _level, float _speed)
+Player::Player(Vector2 _startPos, int _size, Color _color, float _speed, int _startHealth, int _level)
 {
 	position = _startPos;
-	health = _startHealth;
 	size = _size;
-	level = _level;
+	color = _color;
 	speed = _speed;
+	level = _level;
+	health = _startHealth;
 	weapon = Weapon();
 }
 
@@ -32,12 +37,13 @@ void Player::SetWeapon(Weapon _weapon)
 
 /******************** ENEMY CHARACTER **************************/
 
-Enemy::Enemy(Vector2 _startPos, int _startHealth, int _size, int _level, float _speed)
+Enemy::Enemy(Vector2 _startPos, int _size, Color _color, int _level, int _startHealth, float _speed)
 {
 	position = _startPos;
-	health = _startHealth;
 	size = _size;
+	color = _color;
 	level = _level;
+	health = _startHealth;
 	speed = _speed;
 }
 
